@@ -1,58 +1,55 @@
 const SDK = require('dat-sdk')
 const { Hypercore, Hyperdrive, resolveName, deleteStorage, destroy } = SDK()
 const hypertrie = require('hypertrie')
+const raidb = require('random-access-idb')
 
-const discoveryCoreKey = 'dat://3ce27d84cfc0f5581e7f60503f1afa603728dbfd029e620926ff389da7a4d666'
-const db = hypertrie(null,
-  { feed: new Hypercore(discoveryCoreKey), extensions: ['discovery']})
+document.title = 'READER'
 
-db.createReadStream()
-  .on('data', data => console.log(data.key))
-  .on('end', _ => console.log('(end)'))
+window.onmessage = ({ source, data}) => {
+  if (source === window.opener) {
+    const daturl = data
+    start(daturl)
+  }
+}
+window.opener.postMessage('ready', '*')
 
-// db.get('16238cc7c846ef7e27a3d084ef7c679a36f5b820c3d9b079e24a2d75e7787a64', (err, node) => {
-//   console.log(db)
-//   console.log('Got key: ', node.key)
-//   console.log('Loaded value from trie: ', node.value.toString())
-// })
+function start (daturl) {
+  console.log('Trying to initialize:')
+  console.log(daturl)
 
+  // const db = hypertrie(null, daturl, {
+  //   valueEncoding: 'json',
+  //   feed: new Hypercore(filename => (console.log({filename}), raidb())),
+  //   // extensions: ['discovery']
+  // })
 
-const myCore = Hypercore(null, {
-  valueEncoding: 'json',
-  persist: false
-})
+  // reallyReady(db, () => {
+  //   console.log('READY')
+  //   db.list((err, nodes) => nodes.forEach(node => {
+  //     console.log(`${node.key}: ${node.value.toString('utf-8')}`)
+  //   }))
+  // })
 
+  //
+  // // This make sure you sync up with peers before trying to do anything with the archive
+  // function reallyReady (archive, cb) {
+  //   debugger
+  //   if (archive.metadata.peers.length) {
+  //     archive.metadata.update({ ifAvailable: true }, cb)
+  //   } else {
+  //     archive.metadata.once('peer-add', () => {
+  //       archive.metadata.update({ ifAvailable: true }, cb)
+  //     })
+  //   }
+  // }
 
-// Add some data to it
-myCore.append(JSON.stringify({
-  name: 'Alice'
-}), () => {
-  // Use extension messages for sending extra data over the p2p connection
-  const discoveryCoreKey = 'dat://3ce27d84cfc0f5581e7f60503f1afa603728dbfd029e620926ff389da7a4d666'
-  console.log(discoveryCoreKey)
+  // db.createReadStream()
+  //   .on('data', data => console.log(data.key))
+  //   .on('end', _ => console.log('(end)'))
 
-  const discoveryCore = new Hypercore(discoveryCoreKey, {
-    extensions: ['discovery']
-  })
-
-  // When you find a new peer, tell them about your core
-  discoveryCore.on('peer-add', (peer) => {
-    console.log('Got a peer!')
-    peer.extension('discovery', myCore.key)
-  })
-
-  // When a peer tells you about their core, load it
-  discoveryCore.on('extension', (type, message) => {
-    console.log('Got extension message', type, message)
-    if (type !== 'discovery') return
-    discoveryCore.close()
-
-    const otherCore = new Hypercore(message, {
-      valueEncoding: 'json',
-      persist: false
-    })
-
-    // Render the peer's data from their core
-    otherCore.get(0, console.log)
-  })
-})
+  // db.get('16238cc7c846ef7e27a3d084ef7c679a36f5b820c3d9b079e24a2d75e7787a64', (err, node) => {
+  //   console.log(db)
+  //   console.log('Got key: ', node.key)
+  //   console.log('Loaded value from trie: ', node.value.toString())
+  // })
+}
