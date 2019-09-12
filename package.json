@@ -1,0 +1,24 @@
+{
+  "name": "reader",
+  "version": "0.0.0",
+  "description": "a ui component slider for numbers",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "budo demo/demo.js:bundle.js --live --open --ssl",
+    "build": "browserify demo/demo.js > bundle.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git"
+  },
+  "author": "@ninabreznik",
+  "license": "MIT",
+  "devDependencies": {
+    "budo": "^11.6.3"
+  },
+  "dependencies": {
+    "dat-sdk": "^0.3.1",
+    "hypertrie": "^3.8.0",
+    "random-access-memory": "^3.1.1"
+  }
+}
