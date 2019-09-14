@@ -17,7 +17,7 @@
     "budo": "^11.6.3"
   },
   "dependencies": {
-    "dat-sdk": "^0.3.1",
+    "dat-sdk": "^0.3.2",
     "hypertrie": "^3.8.0",
     "random-access-memory": "^3.1.1"
   }
