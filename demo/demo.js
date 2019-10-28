@@ -31,7 +31,6 @@ function start (daturl) {
 
   trie.ready(() => {
     console.log('Loaded trie', daturl)
-    console.log(`DATURL IS: ${daturl} `)
     reallyReady(trie, () => {
       console.log('READY')
       viewTrie()
