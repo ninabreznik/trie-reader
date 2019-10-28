@@ -32,6 +32,7 @@ function start (daturl) {
 
   trie.ready(() => {
     console.log('Loaded trie', daturl)
+    console.log(`DATURL IS: ${daturl} `)
     reallyReady(trie, () => {
       console.log('READY')
       viewTrie()
@@ -13960,7 +13961,11 @@ module.exports = ({
       }
       if (!cb) cb = noop
 
-      const domain = url.slice(DAT_PROTOCOL.length)
+      let domain = url
+
+      if (domain.startsWith(DAT_PROTOCOL)) {
+        domain = url.slice(DAT_PROTOCOL.length)
+      }
 
       if (cache[domain]) {
         if (cb) {
@@ -14027,8 +14032,8 @@ const DEFAULT_DRIVE_OPTS = {
   persist: true
 }
 const DEFAULT_CORE_OPTS = {
-	sparse: true,
-	persist: true
+  sparse: true,
+  persist: true
 }
 const DEFAULT_DNS_OPTS = {}
 
@@ -14092,7 +14097,7 @@ function SDK ({ storageOpts, swarmOpts, driveOpts, coreOpts, dnsOpts } = {}) {
       // Location must be relative path
     }
 
-    const stringKey = location.toString('hex')
+    const stringKey = key.toString('hex')
 
     if (drives.has(stringKey)) return drives.get(stringKey)
 
@@ -14167,8 +14172,18 @@ function SDK ({ storageOpts, swarmOpts, driveOpts, coreOpts, dnsOpts } = {}) {
     if (cores.has(stringKey)) return cores.get(stringKey)
 
     const { persist } = opts
-
-    const coreStorage = persist ? storage.getCore(location) : RAM
+    let coreStorage = null
+    try {
+      if (!persist) {
+        coreStorage = RAM
+      } else if (opts.storage) {
+        coreStorage = opts.storage(location)
+      } else {
+        coreStorage = storage.getCore(location)
+      }
+    } catch (e) {
+      if (e.message !== 'Unable to create storage') throw e
+    }
 
     const core = hypercore(coreStorage, key, opts)
 
