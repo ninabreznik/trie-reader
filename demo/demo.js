@@ -6,7 +6,7 @@ var Discovery = require('hyperdiscovery')
 
 document.title = 'READER'
 
-const daturl = `dat://23f86a22bb80790119d22b68c828b209439ec092385943c40055caf3143ac732`
+const daturl = `dat://5edf2ab26601df5db81bbec3bdaa0ed81f074098df04b1a9bca83aa9d446ef04`
 
 start(daturl)
 
