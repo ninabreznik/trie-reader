@@ -1,12 +1,14 @@
 const hypercore = require('hypercore')
 const hypertrie = require('hypertrie')
 const ram = require('random-access-memory')
-const { ClientSwarm } = require('hyperswarm-ws')
 const eos = require('end-of-stream')
 
-const dat = '4105b44cf82ae557e7c0d73b270bc98e8e7ab107e21f4f22d349e2dca023c491'
-const swarm = new ClientSwarm('ws://localhost:4200')
+const HyperswarmClient = require('hyperswarm-proxy-ws/client')
+const swarm = new HyperswarmClient({ proxy: 'ws://localhost:3472' })
+//const swarm = new ClientSwarm('ws://localhost:4200')
+//const { ClientSwarm } = require('hyperswarm-ws')
 
+const dat = '619fe4c3bf83c0db8020596a3416ae48d966409bd30480811f8f4b5f1d0b83e8'
 
 start(dat)
 
@@ -25,7 +27,9 @@ function start (dat) {
     console.log('Loaded trie', dat)
     reallyReady(trie, () => {
       console.log('READY')
-      viewTrie()
+      // viewTrie()
+      getStream()
+      //getCount()
     })
   })
 
@@ -35,6 +39,16 @@ function start (dat) {
       console.log('Query', query)
       console.log('Response', res.value.toString('utf8'))
     })
+  }
+
+  function getStream () {
+    trie.createReadStream()
+    .on('data', console.log)
+    .on('end', console.log.bind(console, '\n(end)'))
+  }
+
+  function getCount () {
+
   }
 
   function reallyReady (trie, cb) {
