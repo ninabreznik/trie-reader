@@ -12,6 +12,8 @@ $ npm start
 ```
 
 Additionally:
-run a seeder (`node seeder.js`) => logs a feed key
-replace the const dat (feed key) with the one from seeder.js (demo.js line 11)
-run a hyperswarm gateway (`node hyperswarm-gateway.js`)
+---
+
+- run a seeder (`node seeder.js`) => logs a feed key
+- replace the const dat (feed key) with the one from seeder.js (demo.js line 11)
+- run a hyperswarm gateway (`node hyperswarm-gateway.js`)
