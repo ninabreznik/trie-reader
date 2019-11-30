@@ -1,21 +1,21 @@
-const SDK = require('dat-sdk')
-const { Hypercore, Hyperdrive, resolveName, deleteStorage, destroy } = SDK()
-const hypertrie = require('hypertrie')
-const raidb = require('random-access-idb')
-
-document.title = 'READER'
-
-window.onmessage = ({ source, data}) => {
-  if (source === window.opener) {
-    const daturl = data
-    start(daturl)
-  }
-}
-window.opener.postMessage('ready', '*')
-
-function start (daturl) {
-  console.log('Trying to initialize:')
-  console.log(daturl)
+// const SDK = require('dat-sdk')
+// const { Hypercore, Hyperdrive, resolveName, deleteStorage, destroy } = SDK()
+// const hypertrie = require('hypertrie')
+// const raidb = require('random-access-idb')
+//
+// document.title = 'READER'
+//
+// window.onmessage = ({ source, data}) => {
+//   if (source === window.opener) {
+//     const daturl = data
+//     start(daturl)
+//   }
+// }
+// window.opener.postMessage('ready', '*')
+//
+// function start (daturl) {
+//   console.log('Trying to initialize:')
+//   console.log(daturl)
 
   // const db = hypertrie(null, daturl, {
   //   valueEncoding: 'json',
@@ -52,4 +52,4 @@ function start (daturl) {
   //   console.log('Got key: ', node.key)
   //   console.log('Loaded value from trie: ', node.value.toString())
   // })
-}
+// }

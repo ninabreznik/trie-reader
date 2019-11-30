@@ -1,50 +1,42 @@
-const SDK = require('dat-sdk')
-const { Hypercore } = SDK()
+const hypercore = require('hypercore')
 const hypertrie = require('hypertrie')
-const RAI = require('random-access-idb')
-var Discovery = require('hyperdiscovery')
+const ram = require('random-access-memory')
+const { ClientSwarm } = require('hyperswarm-ws')
+const eos = require('end-of-stream')
 
-document.title = 'READER'
+const dat = '4105b44cf82ae557e7c0d73b270bc98e8e7ab107e21f4f22d349e2dca023c491'
+const swarm = new ClientSwarm('ws://localhost:4200')
 
-const daturl = `dat://5edf2ab26601df5db81bbec3bdaa0ed81f074098df04b1a9bca83aa9d446ef04`
 
-start(daturl)
+start(dat)
 
-function start (daturl) {
-  const feed = new Hypercore(daturl, { storage: RAI})
-  var discovery = Discovery(feed)
-  discovery.on('connection', function (peer, type) {
-    console.log('got', peer, type)
-    console.log('connected to', discovery.connections, 'peers')
-    peer.on('close', function () {
-      console.log('peer disconnected')
-    })
-  })
+function start (dat) {
 
-  feed.on('peer-add', (peer) => {
-    console.log('got peer', peer)
-  })
-
+  const key = Buffer.from(dat, "hex")
+  const feed = new hypercore(ram, key)
   const trie = hypertrie(null, { feed })
-
-  window.trie = trie
+  swarm.join(key, { live: true })
+  swarm.on('connection', (connection, info) => {
+    console.log('connection found')
+    connection.pipe(feed.replicate(info.client)).pipe(connection)
+  })
 
   trie.ready(() => {
-    console.log('Loaded trie', daturl)
+    console.log('Loaded trie', dat)
     reallyReady(trie, () => {
       console.log('READY')
       viewTrie()
-      //createReadStream()
     })
   })
 
   function viewTrie () {
-    const query = 'contract/0x0e0989b1f9b8a38983c2ba8053269ca62ec9b195.json'
+    const query = 'foo'
     trie.get(query, (err, res) => {
       console.log('Query', query)
       console.log('Response', res.value.toString('utf8'))
     })
   }
+
   function reallyReady (trie, cb) {
     if (trie.feed.peers.length) {
       trie.feed.update({ ifAvailable: true }, cb)
@@ -53,11 +45,6 @@ function start (daturl) {
         trie.feed.update({ ifAvailable: true }, cb)
       })
     }
-  }
-  function createReadStream () {
-    trie.createReadStream()
-    .on('data', data => console.log(data.key))
-    .on('end', _ => console.log('(end)'))
   }
 
 }
