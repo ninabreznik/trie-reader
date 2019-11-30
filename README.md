@@ -7,12 +7,11 @@ $ cd trie-reader
 
 $ npm install
 
-/*
-replace the const dat (feed key) with yours (demo.js line 11)
-you'll need to run a [trie-seeder](https://github.com/ninabreznik/trie-seeder)
-and a [gateway server](https://github.com/RangerMauve/hyperswarm-proxy-ws) too
-*/
 $ npm start
-
 // open dev tools and check the console for the logs
 ```
+
+Additionally:
+run a seeder (`node seeder.js`) => logs a feed key
+replace the const dat (feed key) with the one from seeder.js (demo.js line 11)
+run a hyperswarm gateway (`node hyperswarm-gateway.js`)
