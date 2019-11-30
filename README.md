@@ -15,5 +15,5 @@ Additionally:
 ---
 
 - run a seeder (`node seeder.js`) => logs a feed key
-- replace the const dat (feed key) with the one from seeder.js (demo.js line 11)
+- in src/index.js line 11 replace the const dat (feed key) with the one from seeder.js
 - run a hyperswarm gateway (`node hyperswarm-gateway.js`)

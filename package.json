@@ -4,8 +4,8 @@
   "description": "a ui component slider for numbers",
   "main": "src/index.js",
   "scripts": {
-    "start": "budo demo/demo.js:bundle.js --live --open --ssl",
-    "build": "browserify demo/demo.js > bundle.js",
+    "start": "budo src/index.js:bundle.js --live --open --ssl",
+    "build": "browserify src/index.js > bundle.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -22,7 +22,6 @@
     "end-of-stream": "^1.4.4",
     "hypercore": "^7.7.1",
     "hypertrie": "^3.8.0",
-    "pump": "^3.0.0",
     "random-access-memory": "^3.1.1"
   }
 }
